@@ -20,13 +20,13 @@ DEFINE STREAM sFile.
 
 /* Fetch the list: database, table, field */
 DEFINE VARIABLE cTextString AS CHARACTER.
-DEFINE VARIABLE cDbTableField AS LONGCHAR.
+DEFINE VARIABLE cTableField AS LONGCHAR.
 
 INPUT FROM VALUE("out/table_field_list_" + icDBName + "_" + icDate + ".txt").
 
 DO WHILE TRUE ON ENDKEY UNDO, LEAVE:
    IMPORT UNFORMATTED cTextString.
-   cDbTableField = cDbTableField + cTextString + ";".
+   cTableField = cTableField + cTextString + ";".
 END.
 
 INPUT CLOSE.
@@ -40,7 +40,7 @@ FOR EACH DB._field, EACH DB._file
 
    IF SUBSTRING(DB._file._file-name, 1, 1) = "_" OR
       SUBSTRING(DB._file._file-name, 1, 3) = "SYS" OR
-      INDEX(cDbTableField, ";" + DB._file._file-name + "." + DB._field._field-name + ";") = 0
+      INDEX(cTableField, ";" + DB._file._file-name + "." + DB._field._field-name + ";") = 0
    THEN NEXT.
    
    cQuery = "FOR EACH " + icDBName + "." + DB._file._file-name + 
