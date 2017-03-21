@@ -101,22 +101,18 @@ FOR EACH DB._field, EACH DB._file
       PUT STREAM sFile UNFORMATTED DB._file._file-name cDelimitter.
       PUT STREAM sFile UNFORMATTED DB._field._field-name cQueryExt cDelimitter.
       IF iCount EQ 101
-      THEN PUT STREAM sFile UNFORMATTED ">" STRING(iCount) cDelimitter.
+      THEN PUT STREAM sFile UNFORMATTED ">100" cDelimitter.
       ELSE PUT STREAM sFile UNFORMATTED STRING(iCount) cDelimitter.
       PUT STREAM sFile UNFORMATTED STRING(DB._field._extent) cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[1]) cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[2]) cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[3]) cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[4]) cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[5]) cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[6]) cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[7]).
+      REPEAT i = 1 TO iNumOfUniqueVals:
+         PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[i]) cDelimitter.
+      END.
       PUT STREAM sFile UNFORMATTED SKIP.
 
       DISPLAY DB._file._file-name FORMAT "X(20)"
-                   DB._field._field-name
-                   iCount
-                   DB._field._extent with frame f.
+              DB._field._field-name
+              iCount
+              DB._field._extent WITH FRAME f.
       PAUSE 0.
    END.
 
