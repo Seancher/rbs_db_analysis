@@ -5,6 +5,6 @@ DEF VAR lDate AS CHAR INIT "2812017".
 DO i = 1 to NUM-DBS:
    lDatabaseName = LDBNAME(i).
    DISPLAY lDatabaseName LABEL "Database name: ".
-   RUN create_alias.p(lDatabaseName).
-   RUN gen_database_stat.p(lDatabaseName, lDate).
+   RUN src/create_alias.p(lDatabaseName).
+   RUN src/gen_database_stat.p(lDatabaseName, lDate).
 END.

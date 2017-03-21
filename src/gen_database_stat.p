@@ -34,20 +34,20 @@ INPUT CLOSE.
 OUTPUT STREAM sFile TO VALUE("report/database_stat_" + ilDBName + "_" +
    STRING(DAY(TODAY)) + STRING(MONTH(TODAY)) + STRING(YEAR(TODAY)) + ".txt").
       
-FOR EACH DICTDB._field, EACH DICTDB._file
-   WHERE RECID (_file) = _field._file-recid BREAK BY (_file-name):
+FOR EACH DB._field, EACH DB._file
+   WHERE RECID (DB._file) = DB._field._file-recid BREAK BY (DB._file._file-name):
 
-   IF SUBSTRING(_file-name, 1, 1) = "_" OR
-      SUBSTRING(_file-name, 1, 3) = "SYS" OR
-      INDEX(cDbTableField, _file-name + "," + _field-name) = 0
+   IF SUBSTRING(DB._file._file-name, 1, 1) = "_" OR
+      SUBSTRING(DB._file._file-name, 1, 3) = "SYS" OR
+      INDEX(cDbTableField, DB._file._file-name + "," + DB._file._field-name) = 0
    THEN NEXT.
    
-   cQuery = "FOR EACH " + ilDBName + "." + _file-name + 
-            " BREAK BY " + _field-name.
+   cQuery = "FOR EACH " + ilDBName + "." + DB._file._file-name + 
+            " BREAK BY " + DB._file._field-name.
 
-   REPEAT j = 0 TO _Extent:
+   REPEAT j = 0 TO DB._field._extent:
       /* If the field is an array then go thought its values */
-      IF _Extent > 0 AND j = 0
+      IF DB._field._extent > 0 AND j = 0
       THEN NEXT.
 
       ASSIGN
@@ -55,12 +55,12 @@ FOR EACH DICTDB._field, EACH DICTDB._file
          iCount = 0
          arUniqueVal = "".
 
-      IF _Extent > 0
+      IF DB._field._extent > 0
       THEN cQueryExt = "[" + STRING(j) + "]".
 
       /* Count number of unique */
       DO WHILE TRUE:
-      CREATE BUFFER bh FOR TABLE SUBSTITUTE("&1.&2",ilDBName,_file._file-name).
+      CREATE BUFFER bh FOR TABLE SUBSTITUTE("&1.&2",ilDBName,DB._file._file-name).
          CREATE QUERY qh.
          qh:SET-BUFFERS(bh).
          qh:QUERY-PREPARE(cQuery + cQueryExt) NO-ERROR.
@@ -82,7 +82,7 @@ FOR EACH DICTDB._field, EACH DICTDB._file
             THEN DO:
                iCount = iCount + 1.
                IF iCount < 8
-               THEN arUniqueVal[iCount] = STRING(bh:BUFFER-FIELD(_field-name):BUFFER-VALUE()).
+               THEN arUniqueVal[iCount] = STRING(bh:BUFFER-FIELD(DB._field._field-name):BUFFER-VALUE()).
             END.
          END.
          LEAVE.
@@ -94,10 +94,10 @@ FOR EACH DICTDB._field, EACH DICTDB._file
       DELETE OBJECT qh.
 
       PUT STREAM sFile UNFORMATTED ilDBName + cDelimitter.
-      PUT STREAM sFile UNFORMATTED _file-name + cDelimitter.
-      PUT STREAM sFile UNFORMATTED _field-name + cQueryExt + cDelimitter.
+      PUT STREAM sFile UNFORMATTED DB._file._file-name + cDelimitter.
+      PUT STREAM sFile UNFORMATTED DB._field._field-name + cQueryExt + cDelimitter.
       PUT STREAM sFile UNFORMATTED STRING(iCount) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED STRING(_Extent) + cDelimitter.
+      PUT STREAM sFile UNFORMATTED STRING(DB._field._extent) + cDelimitter.
       PUT STREAM sFile UNFORMATTED arUniqueVal[1] + cDelimitter.
       PUT STREAM sFile UNFORMATTED arUniqueVal[2] + cDelimitter.
       PUT STREAM sFile UNFORMATTED arUniqueVal[3] + cDelimitter.
@@ -107,14 +107,14 @@ FOR EACH DICTDB._field, EACH DICTDB._file
       PUT STREAM sFile UNFORMATTED arUniqueVal[7].
       PUT STREAM sFile UNFORMATTED SKIP.
 
-      IF FIRST-OF (_file-name)
-      THEN DISPLAY _file-name FORMAT "X(20)"
-                   _field-name
-                    iCount
-                   _Extent with frame f.
-      ELSE DISPLAY _field-name
-                    iCount
-                   _Extent with frame f.
+      IF FIRST-OF (DB._file._file-name)
+      THEN DISPLAY DB._file._file-name FORMAT "X(20)"
+                   DB._field._field-name
+                   iCount
+                   DB._field._extent with frame f.
+      ELSE DISPLAY DB._field._field-name
+                   iCount
+                   DB._field._extent with frame f.
       PAUSE 0.
    END.
 
