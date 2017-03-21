@@ -15,8 +15,8 @@ FOR EACH DB._field, EACH DB._file
       SUBSTRING(DB._file._file-name,1,3) = "SYS"
    THEN NEXT.
    
-   PUT STREAM sFile UNFORMATTED ";" DB._file._file-name cDelimitter
-                                DB._field._field-name ";".
+   PUT STREAM sFile UNFORMATTED DB._file._file-name cDelimitter
+                                DB._field._field-name.
    PUT STREAM sFile UNFORMATTED SKIP.
 END.
 
