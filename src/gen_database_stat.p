@@ -22,7 +22,7 @@ DEFINE STREAM sFile.
 DEFINE VARIABLE cTextString AS CHARACTER.
 DEFINE VARIABLE cTableField AS LONGCHAR.
 
-INPUT FROM VALUE("out/table_field_list_" + icDBName + "_" + icDate + ".txt").
+INPUT FROM VALUE("out/all_tablefields_" + icDBName + "_" + icDate + ".txt").
 
 DO WHILE TRUE ON ENDKEY UNDO, LEAVE:
    IMPORT UNFORMATTED cTextString.

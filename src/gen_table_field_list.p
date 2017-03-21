@@ -5,7 +5,7 @@ DEFINE INPUT PARAMETER icDate AS CHAR.
 DEFINE VARIABLE cDelimitter AS CHAR INIT ".".
 DEFINE STREAM sFile.
 
-OUTPUT STREAM sFile TO VALUE("out/table_field_list_" + ilDBName + "_" + 
+OUTPUT STREAM sFile TO VALUE("out/all_tablefields_" + ilDBName + "_" + 
    icDate + ".txt").
 
 FOR EACH DB._field, EACH DB._file
