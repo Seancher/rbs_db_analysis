@@ -75,7 +75,7 @@ FOR EACH DB._field, EACH DB._file
          END.
 
          REPEAT:
-            IF iCount EQ 100
+            IF iCount EQ 101
             THEN LEAVE.
             
             qh:GET-NEXT().
@@ -100,7 +100,7 @@ FOR EACH DB._field, EACH DB._file
       PUT STREAM sFile UNFORMATTED icDBName cDelimitter.
       PUT STREAM sFile UNFORMATTED DB._file._file-name cDelimitter.
       PUT STREAM sFile UNFORMATTED DB._field._field-name cQueryExt cDelimitter.
-      IF iCount EQ 100
+      IF iCount EQ 101
       THEN PUT STREAM sFile UNFORMATTED ">" STRING(iCount) cDelimitter.
       ELSE PUT STREAM sFile UNFORMATTED STRING(iCount) cDelimitter.
       PUT STREAM sFile UNFORMATTED STRING(DB._field._extent) cDelimitter.
@@ -113,12 +113,8 @@ FOR EACH DB._field, EACH DB._file
       PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[7]).
       PUT STREAM sFile UNFORMATTED SKIP.
 
-      IF FIRST-OF (DB._file._file-name)
-      THEN DISPLAY DB._file._file-name FORMAT "X(20)"
+      DISPLAY DB._file._file-name FORMAT "X(20)"
                    DB._field._field-name
-                   iCount
-                   DB._field._extent with frame f.
-      ELSE DISPLAY DB._field._field-name
                    iCount
                    DB._field._extent with frame f.
       PAUSE 0.
