@@ -1,10 +1,12 @@
 /* generate list: database, table, field */
 DEFINE INPUT PARAMETER ilDBName AS CHAR.
+DEFINE INPUT PARAMETER icDate AS CHAR.
+
 DEFINE VARIABLE cDelimitter AS CHAR INIT ".".
 DEFINE STREAM sFile.
 
 OUTPUT STREAM sFile TO VALUE("out/table_field_list_" + ilDBName + "_" + 
-   STRING(DAY(TODAY)) + STRING(MONTH(TODAY)) + STRING(YEAR(TODAY)) + ".txt").
+   icDate + ".txt").
 
 FOR EACH DB._field, EACH DB._file
    WHERE RECID (DB._file) = DB._field._file-recid BREAK BY (DB._file._file-name):
