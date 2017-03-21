@@ -1,10 +1,11 @@
-DEFINE INPUT PARAMETER ilDBName AS CHAR.
-DEFINE INPUT PARAMETER ilDate AS CHAR.
+DEFINE INPUT PARAMETER icDBName AS CHAR.
+DEFINE INPUT PARAMETER icDate AS CHAR.
 
 /* list databases, tables and fields */
 DEF VAR i AS INTEGER.
 DEF VAR j AS INTEGER.
-DEF VAR arUniqueVal AS CHAR EXTENT 7.
+DEF VAR arUniqueVal AS CHAR EXTENT 40.
+DEF VAR iNumOfUniqueVals AS INTEGER INIT 40.
 
 DEF VAR cQuery AS CHAR.
 DEF VAR cQueryExt AS CHAR.
@@ -21,7 +22,7 @@ DEFINE STREAM sFile.
 DEFINE VARIABLE cTextString AS CHARACTER.
 DEFINE VARIABLE cDbTableField AS LONGCHAR.
 
-INPUT FROM VALUE("report/table_field_list_" + ilDBName + "_" + ilDate + ".txt").
+INPUT FROM VALUE("out/table_field_list_" + icDBName + "_" + icDate + ".txt").
 
 DO WHILE TRUE ON ENDKEY UNDO, LEAVE:
    IMPORT UNFORMATTED cTextString.
@@ -31,7 +32,7 @@ END.
 INPUT CLOSE.
 
 /* Generate database statistics */
-OUTPUT STREAM sFile TO VALUE("report/database_stat_" + ilDBName + "_" +
+OUTPUT STREAM sFile TO VALUE("out/database_stat_" + icDBName + "_" +
    STRING(DAY(TODAY)) + STRING(MONTH(TODAY)) + STRING(YEAR(TODAY)) + ".txt").
       
 FOR EACH DB._field, EACH DB._file
@@ -39,10 +40,10 @@ FOR EACH DB._field, EACH DB._file
 
    IF SUBSTRING(DB._file._file-name, 1, 1) = "_" OR
       SUBSTRING(DB._file._file-name, 1, 3) = "SYS" OR
-      INDEX(cDbTableField, DB._file._file-name + "," + DB._file._field-name) = 0
+      INDEX(cDbTableField, DB._file._file-name + "." + DB._file._field-name) = 0
    THEN NEXT.
    
-   cQuery = "FOR EACH " + ilDBName + "." + DB._file._file-name + 
+   cQuery = "FOR EACH " + icDBName + "." + DB._file._file-name + 
             " BREAK BY " + DB._file._field-name.
 
    REPEAT j = 0 TO DB._field._extent:
@@ -60,7 +61,7 @@ FOR EACH DB._field, EACH DB._file
 
       /* Count number of unique */
       DO WHILE TRUE:
-      CREATE BUFFER bh FOR TABLE SUBSTITUTE("&1.&2",ilDBName,DB._file._file-name).
+      CREATE BUFFER bh FOR TABLE SUBSTITUTE("&1.&2",icDBName,DB._file._file-name).
          CREATE QUERY qh.
          qh:SET-BUFFERS(bh).
          qh:QUERY-PREPARE(cQuery + cQueryExt) NO-ERROR.
@@ -74,6 +75,9 @@ FOR EACH DB._field, EACH DB._file
          END.
 
          REPEAT:
+            IF iCount EQ 100
+            THEN LEAVE.
+            
             qh:GET-NEXT().
             IF NOT bh:AVAILABLE
             THEN LEAVE.
@@ -81,7 +85,7 @@ FOR EACH DB._field, EACH DB._file
             IF qh:FIRST-OF(1)
             THEN DO:
                iCount = iCount + 1.
-               IF iCount < 8
+               IF iCount <= iNumOfUniqueVals
                THEN arUniqueVal[iCount] = STRING(bh:BUFFER-FIELD(DB._field._field-name):BUFFER-VALUE()).
             END.
          END.
@@ -93,18 +97,20 @@ FOR EACH DB._field, EACH DB._file
       DELETE OBJECT bh.
       DELETE OBJECT qh.
 
-      PUT STREAM sFile UNFORMATTED ilDBName + cDelimitter.
+      PUT STREAM sFile UNFORMATTED icDBName + cDelimitter.
       PUT STREAM sFile UNFORMATTED DB._file._file-name + cDelimitter.
       PUT STREAM sFile UNFORMATTED DB._field._field-name + cQueryExt + cDelimitter.
-      PUT STREAM sFile UNFORMATTED STRING(iCount) + cDelimitter.
+      IF iCount EQ 100
+      THEN PUT STREAM sFile UNFORMATTED ">" STRING(iCount) cDelimitter.
+      ELSE PUT STREAM sFile UNFORMATTED STRING(iCount) + cDelimitter.
       PUT STREAM sFile UNFORMATTED STRING(DB._field._extent) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED arUniqueVal[1] + cDelimitter.
-      PUT STREAM sFile UNFORMATTED arUniqueVal[2] + cDelimitter.
-      PUT STREAM sFile UNFORMATTED arUniqueVal[3] + cDelimitter.
-      PUT STREAM sFile UNFORMATTED arUniqueVal[4] + cDelimitter.
-      PUT STREAM sFile UNFORMATTED arUniqueVal[5] + cDelimitter.
-      PUT STREAM sFile UNFORMATTED arUniqueVal[6] + cDelimitter.
-      PUT STREAM sFile UNFORMATTED arUniqueVal[7].
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[1]) + cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[2]) + cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[3]) + cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[4]) + cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[5]) + cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[6]) + cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[7]).
       PUT STREAM sFile UNFORMATTED SKIP.
 
       IF FIRST-OF (DB._file._file-name)
