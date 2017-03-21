@@ -32,7 +32,7 @@ END.
 INPUT CLOSE.
 
 /* Generate database statistics */
-OUTPUT STREAM sFile TO VALUE("out/database_stat_" + icDBName + "_" +
+OUTPUT STREAM sFile TO VALUE("out/database_stat_" + icDBName + "_" + 
    STRING(DAY(TODAY)) + STRING(MONTH(TODAY)) + STRING(YEAR(TODAY)) + ".txt").
       
 FOR EACH DB._field, EACH DB._file
@@ -40,11 +40,11 @@ FOR EACH DB._field, EACH DB._file
 
    IF SUBSTRING(DB._file._file-name, 1, 1) = "_" OR
       SUBSTRING(DB._file._file-name, 1, 3) = "SYS" OR
-      INDEX(cDbTableField, DB._file._file-name + "." + DB._file._field-name) = 0
+      INDEX(cDbTableField, ";" + DB._file._file-name + "." + DB._field._field-name + ";") = 0
    THEN NEXT.
    
    cQuery = "FOR EACH " + icDBName + "." + DB._file._file-name + 
-            " BREAK BY " + DB._file._field-name.
+            " BREAK BY " + DB._field._field-name.
 
    REPEAT j = 0 TO DB._field._extent:
       /* If the field is an array then go thought its values */
@@ -97,19 +97,19 @@ FOR EACH DB._field, EACH DB._file
       DELETE OBJECT bh.
       DELETE OBJECT qh.
 
-      PUT STREAM sFile UNFORMATTED icDBName + cDelimitter.
-      PUT STREAM sFile UNFORMATTED DB._file._file-name + cDelimitter.
-      PUT STREAM sFile UNFORMATTED DB._field._field-name + cQueryExt + cDelimitter.
+      PUT STREAM sFile UNFORMATTED icDBName cDelimitter.
+      PUT STREAM sFile UNFORMATTED DB._file._file-name cDelimitter.
+      PUT STREAM sFile UNFORMATTED DB._field._field-name cQueryExt cDelimitter.
       IF iCount EQ 100
       THEN PUT STREAM sFile UNFORMATTED ">" STRING(iCount) cDelimitter.
-      ELSE PUT STREAM sFile UNFORMATTED STRING(iCount) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED STRING(DB._field._extent) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[1]) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[2]) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[3]) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[4]) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[5]) + cDelimitter.
-      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[6]) + cDelimitter.
+      ELSE PUT STREAM sFile UNFORMATTED STRING(iCount) cDelimitter.
+      PUT STREAM sFile UNFORMATTED STRING(DB._field._extent) cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[1]) cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[2]) cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[3]) cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[4]) cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[5]) cDelimitter.
+      PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[6]) cDelimitter.
       PUT STREAM sFile UNFORMATTED TRIM(arUniqueVal[7]).
       PUT STREAM sFile UNFORMATTED SKIP.
 

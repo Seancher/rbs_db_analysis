@@ -1,6 +1,6 @@
 DEF VAR i AS INTEGER.
 DEF VAR lDatabaseName AS CHAR.
-DEF VAR lDate AS CHAR INIT "2812017".
+DEF VAR lDate AS CHAR INIT "2132017".
 
 DO i = 1 to NUM-DBS:
    lDatabaseName = LDBNAME(i).
