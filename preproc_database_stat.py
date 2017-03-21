@@ -9,34 +9,34 @@ def beginsWithAny(seq, aset):
 
 # prepare database stat report file
 for db in dbset:
-   reportin  = "report/database_stat_" + db + "_" + date + ".txt"
-   reportout = reportin[0:-4] + "_preprocessed.txt"
-   fout = open(reportout,"w")
-   notfirstline = False
-   with open(reportin) as fin:
-       for line in fin:
-          if notfirstline and beginsWithAny(dbset,line):
-             fout.write("\n")
-	  notfirstline = True
-          fout.write(line.rstrip("\n"))
-fin.close()
-fout.close()
+   reportIn  = "out/database_stat_" + db + "_" + date + ".txt"
+   reportOut = reportIn[0:-4] + "_preprocessed.txt"
+   fOut = open(reportOut,"w")
+   notFirstLine = False
+   with open(reportIn) as fIn:
+      for line in fIn:
+         if notFirstLine and beginsWithAny(dbset,line):
+            fOut.write("\n")
+         notFirstLine = True
+         fOut.write(line.rstrip("\n"))
+   fIn.close()
+   fOut.close()
 
 # remove unused fields
 for db in dbset:
-   reportin = "out/database_stat_" + db + "_" + date + "_preprocessed.txt"
-   reportout_usedfields   = "out/usedfields_" + db + "_" + date + ".txt"
-   fout_usedfields = open(reportout_usedfields,"w")
+   reportIn = "out/database_stat_" + db + "_" + date + "_preprocessed.txt"
+   reportOut_usedFields = "out/used_tablefields_" + db + "_" + date + ".txt"
+   fOut_usedFields = open(reportOut_usedFields,"w")
    curline = ""
-   with open(reportin) as fin:
-      for line in fin:
+   with open(reportIn) as fIn:
+      for line in fIn:
          if line.split("|")[3] == "0" or \
 	        (line.split("|")[3] == "1" and line.split("|")[5] == "0") or \
             (line.split("|")[3] == "1" and line.split("|")[5] == "?") or \
             (line.split("|")[3] == "1" and line.split("|")[5] == ""):
-	        "hello"
- 	     else:
-	        fout_usedfields.write(",".join(line.split("|")[1:3]))
-	        fout_usedfields.write("\n")
-   fin.close()
-   fout_usedfields.close()
+            "skip this field"
+         else:
+            fOut_usedFields.write(".".join(line.split("|")[1:3]))
+            fOut_usedFields.write("\n")
+   fIn.close()
+   fOut_usedFields.close()
