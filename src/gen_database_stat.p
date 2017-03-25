@@ -20,13 +20,17 @@ DEFINE STREAM sFile.
 
 /* Fetch the list: database, table, field */
 DEFINE VARIABLE cTextString AS CHARACTER.
-DEFINE VARIABLE cTableField AS LONGCHAR.
+DEFINE TEMP-TABLE ttTableField
+   FIELD TableName AS CHARACTER
+   FIELD FieldName AS CHARACTER.
 
 INPUT FROM VALUE("out/all_tablefields_" + icDBName + "_" + icDate + ".txt").
 
 DO WHILE TRUE ON ENDKEY UNDO, LEAVE:
    IMPORT UNFORMATTED cTextString.
-   cTableField = cTableField + cTextString + ";".
+   CREATE ttTableField.
+   ttTableField.TableName = ENTRY(1,cTextString,".").
+   ttTableField.FieldName = ENTRY(2,cTextString,".").
 END.
 
 INPUT CLOSE.
@@ -37,10 +41,13 @@ OUTPUT STREAM sFile TO VALUE("out/database_stat_" + icDBName + "_" +
       
 FOR EACH DB._field, EACH DB._file
    WHERE RECID (DB._file) = DB._field._file-recid BREAK BY (DB._file._file-name):
+   
+   FIND FIRST ttTableField WHERE ttTableField.TableName = DB._file._file-name AND
+                                 ttTableField.FieldName = DB._field._field-name NO-ERROR.
 
    IF SUBSTRING(DB._file._file-name, 1, 1) = "_" OR
       SUBSTRING(DB._file._file-name, 1, 3) = "SYS" OR
-      INDEX(cTableField, ";" + DB._file._file-name + "." + DB._field._field-name + ";") = 0
+      NOT AVAILABLE ttTableField
    THEN NEXT.
    
    cQuery = "FOR EACH " + icDBName + "." + DB._file._file-name + 
