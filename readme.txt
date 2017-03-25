@@ -1,5 +1,5 @@
 1. Make list of all table and fields
-mpro -pf /apps/deployment/rbs/db/progress/store/all.pf
+mpro -pf /apps/deployment/db/progress/store/all.pf
 run make_table_field_list.p
 output: all_tablefields_<DB>_<DATE>.txt
 
