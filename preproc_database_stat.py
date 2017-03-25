@@ -1,5 +1,5 @@
 dbset = ["common","rbs","rating","billing","accrec","mcdr","counter"]
-date = "2132017"
+date = "2532017"
 
 def beginsWithAny(seq, aset):
    """ Check whether sequence seq contains ANY of the items in aset. """
@@ -19,6 +19,7 @@ for db in dbset:
             fOut.write("\n")
          notFirstLine = True
          fOut.write(line.rstrip("\n"))
+   fOut.write("\n")
    fIn.close()
    fOut.close()
 
@@ -38,5 +39,6 @@ for db in dbset:
          else:
             fOut_usedFields.write(".".join(line.split("|")[1:3]))
             fOut_usedFields.write("\n")
+   fOut_usedFields.write("\n")
    fIn.close()
    fOut_usedFields.close()
