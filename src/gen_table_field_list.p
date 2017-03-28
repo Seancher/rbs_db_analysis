@@ -11,7 +11,9 @@ OUTPUT STREAM sFile TO VALUE("out/all_tablefields_" + ilDBName + "_" +
 FOR EACH DB._field, EACH DB._file
    WHERE RECID (DB._file) = DB._field._file-recid BREAK BY (DB._file._file-name):
 
-   IF SUBSTRING(DB._file._file-name,1,1) = "_" OR
+   /* Skip historical ("X") and system ("_","SYS") fields */
+   IF SUBSTRING(DB._file._file-name,1,1) = "X" OR
+      SUBSTRING(DB._file._file-name,1,1) = "_" OR
       SUBSTRING(DB._file._file-name,1,3) = "SYS"
    THEN NEXT.
    
