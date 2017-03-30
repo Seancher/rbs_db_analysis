@@ -18,10 +18,15 @@ FOR EACH DB._file BY DB._file._file-name:
       SUBSTRING(DB._file._file-name,1,3) = "SYS"
    THEN NEXT.
    
-   /* Store the list of table-fields */
+   /* Store the list of table-field-isIndexed */
    FOR EACH DB._field OF DB._file:
+      FIND FIRST DB._index-field
+         WHERE DB._index-field._field-recid = RECID(DB._field) NO-ERROR.
+   
       PUT STREAM sTableField UNFORMATTED
-         DB._file._file-name cDelimitter DB._field._field-name SKIP.
+         DB._file._file-name cDelimitter
+         DB._field._field-name cDelimitter
+         AVAILABLE DB._index-field SKIP.
    END.
    
    /* Store the list of table-indexes */

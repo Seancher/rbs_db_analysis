@@ -25,14 +25,12 @@ DEFINE TEMP-TABLE ttTableField
    FIELD FieldName AS CHARACTER.
 
 INPUT FROM VALUE("out/all_tablefields_" + icDBName + "_" + icDate + ".txt").
-
 DO WHILE TRUE ON ENDKEY UNDO, LEAVE:
    IMPORT UNFORMATTED cTextString.
    CREATE ttTableField.
-   ttTableField.TableName = ENTRY(1,cTextString,".").
-   ttTableField.FieldName = ENTRY(2,cTextString,".").
+   ASSIGN ttTableField.TableName = ENTRY(1,cTextString,".")
+          ttTableField.FieldName = ENTRY(2,cTextString,".").
 END.
-
 INPUT CLOSE.
 
 /* Generate database statistics */
