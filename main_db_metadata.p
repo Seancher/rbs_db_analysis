@@ -9,5 +9,6 @@ DO i = 1 to NUM-DBS:
    cDatabaseName = LDBNAME(i).
    DISPLAY cDatabaseName LABEL "Database name: ".
    RUN src/create_alias.p(cDatabaseName).
-   RUN src/gen_table_field_list.p(cDatabaseName, cDate).
+   RUN src/gen_db_metadata.p(cDatabaseName, cDate).
 END.
+
