@@ -11,9 +11,9 @@ OUTPUT STREAM sFile TO VALUE("out/tmsparams_dump_" +
 PUT STREAM sFile UNFORMATTED
    "Group" lcDelimitter 
    "Parameter" lcDelimitter
+   "Description" lcDelimitter
    "Type" lcDelimitter
-   "Value" lcDelimitter
-   "Description" SKIP.
+   "Value" SKIP.
 
 /* Fill table */
 FOR EACH TmsParam:
@@ -35,9 +35,9 @@ FOR EACH TmsParam:
    PUT STREAM sFile UNFORMATTED
       TmsParam.ParamGroup lcDelimitter 
       TmsParam.ParamCode lcDelimitter
+      TmsParam.ParamName lcDelimitter
       lcParamType lcDelimitter
-      lcParamVal lcDelimitter
-      TmsParam.ParamName SKIP.
+      lcParamVal SKIP.
 END.
 
 OUTPUT STREAM sFile CLOSE.

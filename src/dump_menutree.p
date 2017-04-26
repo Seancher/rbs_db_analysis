@@ -8,11 +8,11 @@ OUTPUT STREAM sFile TO VALUE("out/menutree_dump_" +
 
 /* Write table header */
 PUT STREAM sFile UNFORMATTED
-   "Menu level" lcDelimitter     "Menu place" lcDelimitter
-   "Menu number" lcDelimitter    "Menu label" lcDelimitter
-   "Function type" lcDelimitter  "Module" lcDelimitter
-   "Function code" lcDelimitter  "Function name" lcDelimitter
-   "Program Class" lcDelimitter  "Deny usage" lcDelimitter
+   "Menu level" lcDelimitter    "Menu place" lcDelimitter
+   "Menu number" lcDelimitter   "Menu label" lcDelimitter
+   "Function name" lcDelimitter "Function code" lcDelimitter
+   "Function type" lcDelimitter "Module" lcDelimitter 
+   "Program Class" lcDelimitter "Deny usage" lcDelimitter
    "Token code" SKIP.
 
 /* Fill table */
@@ -30,10 +30,10 @@ FOR EACH MenuTree:
       MenuTree.Position lcDelimitter /*  label "Menu place ....." help  "Place 1 ... 8 or  0 if Level is 0" */
       MenuTree.MenuNum lcDelimitter /*  label "MENU- number ..." format "zzz9" */
       lcMenuText lcDelimitter /*  LABEL "Label" */
+      MenuTree.MenuTitle lcDelimitter /*  label "Function name .." help "Func. name (lowercase) or MenuText HEADER (uppercase)" */
+      MenuTree.MenuId lcDelimitter /*   label "Function code .." */
       MenuTree.MenuType lcDelimitter /*   label "Function type .." */
       MenuTree.Module lcDelimitter /*  label "Module ........." help "The name of the module Called if function = 3, otherwise empty" */
-      MenuTree.MenuId lcDelimitter /*   label "Function code .." */
-      MenuTree.MenuTitle lcDelimitter /*  label "Function name .." help "Func. name (lowercase) or MenuText HEADER (uppercase)" */
       MenuTree.MenuClass lcDelimitter /*  label "Program Class .." */
       MenuTree.State[1] lcDelimitter /*  label "Deny usage ....." help "If YES the this MenuText can't be used !" SKIP */
       MenuTree.TokenCode SKIP. /*  label "Token code ....." help "Token code for this menu item" */
