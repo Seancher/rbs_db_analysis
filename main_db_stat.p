@@ -2,8 +2,6 @@ DEF VAR i AS INTEGER.
 DEF VAR lDatabaseName AS CHAR.
 DEF INPUT PARAMETER icDate AS CHAR.
 
-cDate = STRING(DAY(TODAY)) + STRING(MONTH(TODAY)) + STRING(YEAR(TODAY)).
-
 DO i = 1 to NUM-DBS:
    lDatabaseName = LDBNAME(i).
    DISPLAY lDatabaseName LABEL "Database name: ".
