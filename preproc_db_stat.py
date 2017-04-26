@@ -1,5 +1,7 @@
+import sys
+
 dbset = ["common","rbs","rating","billing","accrec","mcdr","counter"]
-date = "2532017"
+date = sys.argv[1]
 
 def beginsWithAny(seq, aset):
    """ Check whether sequence seq contains ANY of the items in aset. """
