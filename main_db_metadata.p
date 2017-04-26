@@ -5,6 +5,10 @@ DEF VAR cDate AS CHAR.
 
 cDate = STRING(DAY(TODAY)) + STRING(MONTH(TODAY)) + STRING(YEAR(TODAY)).
 
+RUN src/dump_menutree.p
+RUN src/dump_tmscodes.p
+RUN src/dump_tmsparams.p
+
 DO i = 1 to NUM-DBS:
    cDatabaseName = LDBNAME(i).
    DISPLAY cDatabaseName LABEL "Database name: ".

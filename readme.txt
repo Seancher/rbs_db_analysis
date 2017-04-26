@@ -1,11 +1,14 @@
 1. Make list of all table and fields
 mpro -pf /apps/deployment/db/progress/store/all.pf
-run make_table_field_list.p
+run main_db_metadata.p
 output: all_tablefields_<DB>_<DATE>.txt
+        menutree_dump_<DATE>.txt
+        tmscodes_dump_<DATE>.txt
+        tmsparams_dump_<DATE>.txt
 
 2. Fetch database statistics
 mpro -pf /apps/checkout/rbs/db/progress/store/all.pf
-run make_database_stat.p
+run main_db_stat.p
 required: all_tablefields_<DB>_<DATE>.txt
 output: database_stat_<DB>_<DATE>.txt
 
