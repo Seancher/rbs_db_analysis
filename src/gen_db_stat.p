@@ -35,7 +35,8 @@ INPUT CLOSE.
 
 /* Generate database statistics */
 OUTPUT STREAM sFile TO VALUE("out/database_stat_" + icDBName + "_" + 
-   STRING(DAY(TODAY)) + STRING(MONTH(TODAY)) + STRING(YEAR(TODAY)) + ".txt").
+   STRING(DAY(TODAY),"99") + STRING(MONTH(TODAY),"99") +
+   STRING(YEAR(TODAY),"9999") + ".txt").
       
 FOR EACH DB._field, EACH DB._file
    WHERE RECID (DB._file) = DB._field._file-recid BREAK BY (DB._file._file-name):
