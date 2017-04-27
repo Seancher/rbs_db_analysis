@@ -106,7 +106,9 @@ FOR EACH DB._field, EACH DB._file
       PUT STREAM sFile UNFORMATTED icDBName cDelimitter.
       PUT STREAM sFile UNFORMATTED DB._file._file-name cDelimitter.
       PUT STREAM sFile UNFORMATTED DB._field._field-name cQueryExt cDelimitter.
-      IF iCount EQ 501
+      IF iCount EQ -1
+      THEN PUT STREAM sFile UNFORMATTED "NA" cDelimitter.
+      ELSE IF iCount EQ 501
       THEN PUT STREAM sFile UNFORMATTED ">500" cDelimitter.
       ELSE PUT STREAM sFile UNFORMATTED STRING(iCount) cDelimitter.
       PUT STREAM sFile UNFORMATTED STRING(DB._field._extent) cDelimitter.
