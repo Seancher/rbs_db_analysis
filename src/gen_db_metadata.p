@@ -31,10 +31,11 @@ FOR EACH DB._file BY DB._file._file-name:
    
    /* Store the list of table-indexes */
    FOR EACH DB._index OF DB._file:
-      PUT STREAM sTableIndex UNFORMATTED
-         DB._file._file-name cDelimitter
-         DB._index._index-name cDelimitter
-         RECID(DB._index) = DB._file._prime-index SKIP.
+      IF DB._index._index-name NE "default"
+      THEN PUT STREAM sTableIndex UNFORMATTED
+            DB._file._file-name cDelimitter
+            DB._index._index-name cDelimitter
+            RECID(DB._index) = DB._file._prime-index SKIP.
    END.
 END.
 OUTPUT STREAM sTableIndex CLOSE.
