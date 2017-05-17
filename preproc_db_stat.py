@@ -1,6 +1,6 @@
 import sys
 
-dbset = ["common","rbs","rating","billing","accrec","mcdr","counter"]
+dbset = ["common","rbs","rating","billing","accrec","mcdr","counter","fraudcdr","mcdrdtl","mobile","ordercanal","prepcdr","prepedr","reratelog","roamcdr","star"]
 date = sys.argv[1]
 
 def beginsWithAny(seq, aset):
