@@ -12,7 +12,7 @@ output file: all_tablefields_<DB>_<DDMMYYYY{TODAY}>.txt
              tmsparams_dump_<DDMMYYYY{TODAY}>.txt
 
 2. Fetch database statistics
-secherno@vega>> /opt/dlc/bin/mpro -pf /apps/checkout/rbs/db/progress/store/all.pf
+secherno@vega>> /opt/dlc/bin/mpro -pf /apps/checkout/db/progress/store/all.pf
 in progress: run main_db_stat.p(<DDMMYYYY{Step1Date}>)
 required file: all_tablefields_<DB>_<DDMMYYYY{Step1Date}>.txt
 output file: database_stat_<DB>_<DDMMYYYY{TODAY}>.txt
